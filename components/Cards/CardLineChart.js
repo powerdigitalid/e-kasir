@@ -1,7 +1,8 @@
 import React from "react";
 import Chart from "chart.js";
+import { useState } from "react";
 
-export default function CardLineChart() {
+export default function CardLineChart({}) {
   React.useEffect(() => {
     var config = {
       type: "line",
@@ -14,13 +15,18 @@ export default function CardLineChart() {
           "May",
           "June",
           "July",
+          "August",
+          "September",
+          "October",
+          "November",
+          "December",
         ],
         datasets: [
           {
             label: new Date().getFullYear(),
             backgroundColor: "#4c51bf",
             borderColor: "#4c51bf",
-            data: [65, 78, 66, 44, 56, 67, 75],
+            data: [65, 78, 66, 44, 56, 67, 75, 23, 43, 55, 66, 200],
             fill: false,
           },
           {
@@ -28,7 +34,7 @@ export default function CardLineChart() {
             fill: false,
             backgroundColor: "#fff",
             borderColor: "#fff",
-            data: [40, 68, 86, 74, 56, 60, 87],
+            data: [40, 68, 86, 74, 56, 60, 87, 45, 56, 67, 76, 87],
           },
         ],
       },
@@ -106,16 +112,34 @@ export default function CardLineChart() {
     var ctx = document.getElementById("line-chart").getContext("2d");
     window.myLine = new Chart(ctx, config);
   }, []);
+
   return (
     <>
       <div className="relative flex flex-col min-w-0 break-words w-full mb-6 shadow-lg rounded bg-blueGray-700">
         <div className="rounded-t mb-0 px-4 py-3 bg-transparent">
           <div className="flex flex-wrap items-center">
             <div className="relative w-full max-w-full flex-grow flex-1">
-              <h6 className="uppercase text-blueGray-100 mb-1 text-xs font-semibold">
-                Overview
-              </h6>
               <h2 className="text-white text-xl font-semibold">Sales value</h2>
+              <div className="flex mt-2">
+              <h6 className="text-blueGray-100 mb-1 text-xs font-semibold mr-1 mt-3">Date Range :</h6>
+                <div className="space-y-4">
+                  <input
+                    type="date"
+                    id="date1"
+                    className="dark-input p-2 rounded"
+                    style={{backgroundColor: "#4B5563", color: "#F9FAFB"}}
+                  />
+                </div>
+                <p className="uppercase text-blueGray-100 mb-1 text-xs font-semibold ml-1 mr-1 mt-3">-</p>
+                <div className="space-y-4 ml-8">
+                  <input
+                    type="date"
+                    id="date2"
+                    className="dark-input p-2 rounded"
+                    style={{backgroundColor: "#4B5563", color: "#F9FAFB"}}
+                  />
+                </div>
+              </div>
             </div>
           </div>
         </div>
