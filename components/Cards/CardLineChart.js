@@ -1,8 +1,7 @@
 import React from "react";
 import Chart from "chart.js";
-import { useState } from "react";
 
-export default function CardLineChart({}) {
+export default function CardLineChart() {
   React.useEffect(() => {
     var config = {
       type: "line",
@@ -120,25 +119,30 @@ export default function CardLineChart({}) {
           <div className="flex flex-wrap items-center">
             <div className="relative w-full max-w-full flex-grow flex-1">
               <h2 className="text-white text-xl font-semibold">Sales value</h2>
-              <div className="flex mt-2">
-              <h6 className="text-blueGray-100 mb-1 text-xs font-semibold mr-1 mt-3">Date Range :</h6>
-                <div className="space-y-4">
-                  <input
-                    type="date"
-                    id="date1"
-                    className="dark-input p-2 rounded"
-                    style={{backgroundColor: "#4B5563", color: "#F9FAFB"}}
-                  />
-                </div>
-                <p className="uppercase text-blueGray-100 mb-1 text-xs font-semibold ml-1 mr-1 mt-3">-</p>
-                <div className="space-y-4 ml-8">
-                  <input
-                    type="date"
-                    id="date2"
-                    className="dark-input p-2 rounded"
-                    style={{backgroundColor: "#4B5563", color: "#F9FAFB"}}
-                  />
-                </div>
+              <div
+                className="flex flex-row mt-3"
+                >
+                <h6 className="text-blueGray-100 mb-1 text-xs font-semibold mr-1 mt-3 ">
+                  Date Range :
+                </h6>
+
+                <input
+                  type="date"
+                  id="date1"
+                  className="dark-input p-2 rounded w-1/3"
+                  style={{ backgroundColor: "#4B5563", color: "#F9FAFB" }}
+                />
+
+                <p className="uppercase text-blueGray-100 mb-1 text-xs font-semibold ml-1 mr-1 mt-3 w-1/3">
+                  -
+                </p>
+
+                <input
+                  type="date"
+                  id="date2"
+                  className="dark-input p-2 rounded w-1/3"
+                  style={{ backgroundColor: "#4B5563", color: "#F9FAFB" }}
+                />
               </div>
             </div>
           </div>
