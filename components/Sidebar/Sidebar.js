@@ -1,6 +1,7 @@
 import React from "react";
 import Link from "next/link";
 import { useRouter } from "next/router";
+import { useState } from "react";
 
 import NotificationDropdown from "components/Dropdowns/NotificationDropdown.js";
 import UserDropdown from "components/Dropdowns/UserDropdown.js";
@@ -8,6 +9,12 @@ import UserDropdown from "components/Dropdowns/UserDropdown.js";
 export default function Sidebar() {
   const [collapseShow, setCollapseShow] = React.useState("hidden");
   const router = useRouter();
+
+  const [isDropdownOpen, setIsDropdownOpen] = useState(false);
+  const toggleDropdown = () => {
+    setIsDropdownOpen(!isDropdownOpen);
+  };
+
   return (
     <>
       <nav className="md:left-0 md:block md:fixed md:top-0 md:bottom-0 md:overflow-y-auto md:flex-row md:flex-nowrap md:overflow-hidden shadow-xl bg-white flex flex-wrap items-center justify-between relative md:w-64 z-10 py-4 px-6">
@@ -114,20 +121,20 @@ export default function Sidebar() {
               </li>
 
               <li className="items-center">
-                <Link href="/admin/settings">
+                <Link href="/admin/products">
                   <a
                     href="#pablo"
                     className={
                       "text-xs uppercase py-3 font-bold block " +
-                      (router.pathname.indexOf("/admin/settings") !== -1
+                      (router.pathname.indexOf("/admin/products") !== -1
                         ? "text-lightBlue-500 hover:text-lightBlue-600"
                         : "text-blueGray-700 hover:text-blueGray-500")
                     }
                   >
                     <i
                       className={
-                        "fas fa-cube mr-2 text-sm " +
-                        (router.pathname.indexOf("/admin/settings") !== -1
+                        "fas fa-cube mr-3 text-sm " +
+                        (router.pathname.indexOf("/admin/products") !== -1
                           ? "opacity-75"
                           : "text-blueGray-300")
                       }
@@ -138,63 +145,78 @@ export default function Sidebar() {
               </li>
 
               <li className="items-center">
-                <Link href="/admin/tables">
-                  <a
-                    href="#pablo"
+                <a
+                  href="#"
+                  className="flex text-xs uppercase py-3 font-bold block hover:text-blueGray-500"
+                  onClick={toggleDropdown}
+                >
+                  <i
                     className={
-                      "text-xs uppercase py-3 font-bold block " +
-                      (router.pathname.indexOf("/admin/tables") !== -1
-                        ? "text-lightBlue-500 hover:text-lightBlue-600"
-                        : "text-blueGray-700 hover:text-blueGray-500")
+                      "fas fa-exchange-alt mr-3 ml-1 text-sm " +
+                      (router.pathname.indexOf("/admin/transaksi-product") !==
+                      -1
+                        ? "opacity-75"
+                        : "text-blueGray-300")
                     }
+                  ></i>{" "}
+                  Transaksi
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    className={`h-5 w-5 ml-auto rotate-90 transform ${
+                      isDropdownOpen ? "rotate-180" : ""
+                    }`}
+                    viewBox="0 0 20 20"
+                    fill="currentColor"
                   >
-                    <i
-                      className={
-                        "fas fa-table mr-2 text-sm " +
-                        (router.pathname.indexOf("/admin/tables") !== -1
-                          ? "opacity-75"
-                          : "text-blueGray-300")
-                      }
-                    ></i>{" "}
-                    Tables
-                  </a>
-                </Link>
-              </li>
-
-              <li className="items-center">
-                <Link href="/admin/maps">
-                  <a
-                    href="#pablo"
-                    className={
-                      "text-xs uppercase py-3 font-bold block " +
-                      (router.pathname.indexOf("/admin/maps") !== -1
-                        ? "text-lightBlue-500 hover:text-lightBlue-600"
-                        : "text-blueGray-700 hover:text-blueGray-500")
-                    }
-                  >
-                    <i
-                      className={
-                        "fas fa-map-marked mr-2 text-sm " +
-                        (router.pathname.indexOf("/admin/maps") !== -1
-                          ? "opacity-75"
-                          : "text-blueGray-300")
-                      }
-                    ></i>{" "}
-                    Maps
-                  </a>
-                </Link>
+                    <path
+                      fillRule="evenodd"
+                      d="M5.293 6.707a1 1 0 010-1.414l4-4a1 1 0 011.414 0l4 4a1 1 0 01-1.414 1.414L11 3.414V15a1 1 0 11-2 0V3.414L5.707 6.707a1 1 0 01-1.414 0z"
+                      clipRule="evenodd"
+                    />
+                  </svg>
+                </a>
+                {isDropdownOpen && (
+                  <ul className="" style={{marginLeft:"30px"}}>
+                    <li>
+                    <Link href="/admin/transaksi-beli">
+                      <a
+                        href="#pembelian"
+                        className="text-xs uppercase py-3 block hover:text-blueGray-500"
+                      >
+                        Transaksi Beli
+                      </a>
+                      </Link>
+                    </li>
+                    <li>
+                    <Link href="/admin/transaksi-terjual">
+                      <a
+                        href="#terjual"
+                        className="text-xs uppercase py-3 block hover:text-blueGray-500"
+                      >
+                        Transaksi Terjual
+                      </a>
+                      </Link>
+                    </li>
+                    <li>
+                    <Link href="/admin/transaksi-keuangan">
+                      <a
+                        href="#keuangan"
+                        className="text-xs uppercase py-3 block hover:text-blueGray-500"
+                      >
+                        Transaksi Keuanggan
+                      </a>
+                      </Link>
+                    </li>
+                  </ul>
+                )}
               </li>
             </ul>
 
-      
             <hr className="my-4 md:min-w-full" />
-          
+
             {/* <h6 className="md:min-w-full text-blueGray-500 text-xs uppercase font-bold block pt-1 pb-4 no-underline">
               Auth Layout Pages
             </h6> */}
-         
-
-            
           </div>
         </div>
       </nav>
