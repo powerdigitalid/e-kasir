@@ -17,9 +17,18 @@ async function main() {
     ],
     skipDuplicates: true,
   });
-  
-  console.log({User});
-} 
+  const product = await prisma.product.createMany({
+    data: [
+      {
+        product_name: 'Product 1',
+        product_price: 10000,
+        product_stock: 10,
+      },
+    ],
+    skipDuplicates: true,
+  });
+  console.log({User, product });
+}  
 
 main()
   .then(async () => {
