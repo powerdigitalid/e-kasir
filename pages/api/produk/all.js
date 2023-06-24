@@ -1,14 +1,8 @@
 import { prisma } from "../../../libs/prisma.libs.js";
 
 export default function handler(req, res){
-  prisma.product.findMany().then((product) => {
-    res.status(200).json({
-      message: "All product",
-      data : product
-    });
-  }
-  ).catch((error) => {
-    res.status(500).json({ error: error.message })
-  }
-  )
+    if(req.method === "GET"){
+        const product = prisma.product.findMany();
+        return res.status(200).json({data: product});
+    }
 }
