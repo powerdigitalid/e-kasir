@@ -16,6 +16,7 @@
     "gulp": "^3.9.1",
     "gulp-append-prepend": "1.0.8",
     "jose": "^4.14.4",
+    "mongoose": "^7.3.1",
     "multer": "^1.4.5-lts.1",
     "next": "^13.4.7",
     "path": "^0.12.7",

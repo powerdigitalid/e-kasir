@@ -1,9 +1,38 @@
 import React from "react";
 import PropTypes from "prop-types";
+import {useState, useEffect} from 'react'
 
 // components
 
 export default function CardTableProduct({ color }) {
+  const [data, setData] = useState([])
+    const [loading, setLoading] = useState(true)
+    const [error, setError] = useState(false)
+
+    const handleProduct = () => {
+        fetch('/api/produk/all', {
+            method: "GET",
+        })
+            .then((res) => res.json())
+            .then((res) => {
+                if (res.data) {
+                    setData(res.data);
+                } else {
+                    setData([]);
+                }
+                setLoading(false);
+            })
+            .catch((err) => {
+                console.log(err);
+                setLoading(false);
+                setError(err);
+            });
+    };
+
+    useEffect(() => {
+        handleProduct();
+    }, []);
+
   return (
     <>
       <div
@@ -28,6 +57,7 @@ export default function CardTableProduct({ color }) {
         </div>
         <div className="block w-full overflow-x-auto">
           {/* Projects table */}
+          
           <table className="items-center w-full bg-transparent border-collapse">
             <thead>
               <tr>
@@ -73,16 +103,17 @@ export default function CardTableProduct({ color }) {
                 </th>
               </tr>
             </thead>
+            {data.length > 0 ? data.map((item, index) => (
             <tbody>
-              <tr>
+              <tr key={index}>
                 <td className="border-t-0 px-6 align-middle border-l-0 border-r-0 text-xm whitespace-nowrap p-4">
-                  1
+                  {index + 1}
                 </td>
                 <td className="border-t-0 px-6 align-middle border-l-0 border-r-0 text-xm whitespace-nowrap p-4">
-                  produk A
+                  {item.product_name}
                 </td>
                 <td className="border-t-0 px-6 align-middle border-l-0 border-r-0 text-xm whitespace-nowrap p-4">
-                  Rp. 100.000
+                  Rp. {item.product_price}
                 </td>
                 <td className="border-t-0 px-6 align-middle border-l-0 border-r-0 text-xm whitespace-nowrap p-4">
                   <a
@@ -101,6 +132,7 @@ export default function CardTableProduct({ color }) {
                 </td>
               </tr>
             </tbody>
+         )) : <h3 className="text-center">Belum ada produk</h3>}
           </table>
         </div>
       </div>
