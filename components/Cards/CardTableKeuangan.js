@@ -1,9 +1,56 @@
 import React from "react";
 import PropTypes from "prop-types";
+import {useState, useEffect} from 'react'
+import {useRouter} from 'next/router'
 
 // components
 
 export default function CardTableKeuangan({ color }) {
+  const [data, setData] = useState([])
+    const [loading, setLoading] = useState(true)
+    const [error, setError] = useState(false)
+    const router = useRouter()
+
+    const handleKeuangan = () => {
+        fetch('/api/keuangan/all', {
+            method: "GET",
+        })
+            .then((res) => res.json())
+            .then((res) => {
+
+                if (res.data) {
+                    setData(res.data);
+                } else {
+                    setData([]);
+                }
+                setLoading(false);
+            })
+            .catch((err) => {
+                console.log(err);
+                setLoading(false);
+                setError(err);
+            });
+    };
+
+    const handleDelete = (id) => {
+      fetch(`/api/keuangan/delete?id=${id}`, {
+          method: "DELETE",
+      })
+      .then((res) => res.json())  
+      .then((res) => {
+          if (res.data) {
+              alert("Berhasil menghapus keuangan");
+              handleKeuangan();
+          } else {
+              alert("Gagal menghapus keuangan");
+          }
+      })
+  };
+
+    useEffect(() => {
+        handleKeuangan();
+    }, []);
+
   return (
     <>
       <div
@@ -86,33 +133,42 @@ export default function CardTableKeuangan({ color }) {
                 </th>
               </tr>
             </thead>
+            {data.length > 0 ? data.map((item, index) => (
             <tbody>
               <tr>
                 <td className="border-t-0 px-6 align-middle border-l-0 border-r-0 text-xm whitespace-nowrap p-4">
-                  1
+                  {index + 1}
                 </td>
                 <td className="border-t-0 px-6 align-middle border-l-0 border-r-0 text-xm whitespace-nowrap p-4">
-                  Rp. 100.000
+                  Rp. {item.jumlah_uang}
                 </td>
                 <td className="border-t-0 px-6 align-middle border-l-0 border-r-0 text-xm whitespace-nowrap p-4">
-                  Bayar Karyawan
+                  {item.type.type_name}
                 </td>
                 <td className="border-t-0 px-6 align-middle border-l-0 border-r-0 text-xm whitespace-nowrap p-4">
-                  Rp. 100.000
+                  {item.pembayaran}
                 </td>
                 <td className="border-t-0 px-6 align-middle border-l-0 border-r-0 text-xm whitespace-nowrap p-4">
-                  untuk bulan januari
+                  {item.keterangan}
                 </td>
                 <td className="border-t-0 px-6 align-middle border-l-0 border-r-0 text-xm whitespace-nowrap p-4">
                   <button
                     className="bg-red-700 active:bg-red-600 text-white font-bold uppercase text-xs px-4 py-2 rounded shadow hover:shadow-md outline-none focus:outline-none mr-1 ease-linear transition-all duration-150"
                     type="button"
+                    onClick={() => handleDelete(item.id)}
                   >
                     <i className="fas fa-trash"></i>
                   </button>
                 </td>
               </tr>
             </tbody>
+            )) : <tbody>
+              <tr>
+                <td colSpan="6" className="border-t-0 px-6 align-middle border-l-0 border-r-0 text-xm whitespace-nowrap p-4">
+                  Data Kosong
+                </td>
+              </tr>
+            </tbody>}
           </table>
         </div>
       </div>

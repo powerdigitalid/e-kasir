@@ -1,6 +1,8 @@
+/* eslint-disable no-unused-vars */
 import React from "react";
 import PropTypes from "prop-types";
 import {useState, useEffect} from 'react'
+import {useRouter} from 'next/router'
 
 // components
 
@@ -8,6 +10,7 @@ export default function CardTableProduct({ color }) {
   const [data, setData] = useState([])
     const [loading, setLoading] = useState(true)
     const [error, setError] = useState(false)
+    const router = useRouter()
 
     const handleProduct = () => {
         fetch('/api/produk/all', {
@@ -28,6 +31,21 @@ export default function CardTableProduct({ color }) {
                 setError(err);
             });
     };
+
+    const handleDelete = (id) => {
+      fetch(`/api/produk/delete?id=${id}`, {
+          method: "DELETE",
+      })
+      .then((res) => res.json())
+      .then((res) => {
+          if (res.data) {
+              alert("Berhasil menghapus produk");
+              handleProduct();
+          } else {
+              alert("Gagal menghapus produk");
+          }
+      })
+  };
 
     useEffect(() => {
         handleProduct();
@@ -99,6 +117,16 @@ export default function CardTableProduct({ color }) {
                       : "bg-blueGray-600 text-blueGray-200 border-blueGray-500")
                   }
                 >
+                  Stock
+                </th>
+                <th
+                  className={
+                    "px-6 align-middle border border-solid py-3 text-xs uppercase border-l-0 border-r-0 whitespace-nowrap font-semibold text-left " +
+                    (color === "light"
+                      ? "bg-blueGray-50 text-blueGray-500 border-blueGray-100"
+                      : "bg-blueGray-600 text-blueGray-200 border-blueGray-500")
+                  }
+                >
                   Action
                 </th>
               </tr>
@@ -116,6 +144,9 @@ export default function CardTableProduct({ color }) {
                   Rp. {item.product_price}
                 </td>
                 <td className="border-t-0 px-6 align-middle border-l-0 border-r-0 text-xm whitespace-nowrap p-4">
+                  {item.product_stock}
+                </td>
+                <td className="border-t-0 px-6 align-middle border-l-0 border-r-0 text-xm whitespace-nowrap p-4">
                   <a
                     href="/admin/edit-product"
                     className="bg-emerald-500 hover:bg-emerald-200 text-white font-bold uppercase text-xs px-4 py-2 rounded shadow hover:shadow-md outline-none focus:outline-none mr-1 ease-linear transition-all duration-150"
@@ -126,6 +157,7 @@ export default function CardTableProduct({ color }) {
                   <button
                     className="bg-red-700 active:bg-red-600 text-white font-bold uppercase text-xs px-4 py-2 rounded shadow hover:shadow-md outline-none focus:outline-none mr-1 ease-linear transition-all duration-150"
                     type="button"
+                    onClick={() => handleDelete(item.id)}
                   >
                     <i className="fas fa-trash"></i>
                   </button>

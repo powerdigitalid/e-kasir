@@ -1,8 +1,13 @@
 import { prisma } from "../../../libs/prisma.libs.js";
 
 export default function handler(req, res){
-    if(req.method === "GET"){
-        const product = prisma.product.findMany();
-        return res.status(200).json({data: product});
+    //get all data from table product from database mongodb
+    prisma.product.findMany()
+    .then((data) => {
+        res.status(200).json({data});
     }
+    ).catch((error) => {
+        res.status(500).json({error});
+    }
+    );
 }

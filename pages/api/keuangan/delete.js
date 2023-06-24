@@ -4,19 +4,19 @@ export default async function handler(req, res) {
   const { id } = req.query;
   if (id && req.method === "DELETE") {
     try {
-      const product = await prisma.product.delete({
+      const keuangan = await prisma.keuangan.delete({
         where: {
           id: id,
         },
       });
       res.status(201).json({
-        message: "Delete product success",
-        data: product,
+        message: "Delete keuangan success",
+        data: keuangan,
       });
     } catch (error) {
-      console.error("Delete product error:", error);
+      console.error("Delete keuangan error:", error);
       res.status(500).json({
-        message: "Failed to delete product",
+        message: "Failed to delete keuangan",
         error: error.message,
       });
     }
