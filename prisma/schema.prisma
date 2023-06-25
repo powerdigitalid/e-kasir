@@ -24,6 +24,7 @@ model Transaksi_jual {
   product_id     String @db.ObjectId
   quantity      Int
   total        Int
+  date       DateTime
   createdAt     DateTime @default(now())
   updatedAt     DateTime @default(now())
 }
@@ -34,6 +35,7 @@ model Transaksi_beli {
   product_id     String @db.ObjectId
   quantity      Int
   total        Int
+  date       DateTime
   createdAt     DateTime @default(now())
   updatedAt     DateTime @default(now())
 }
@@ -52,6 +54,7 @@ model Keuangan {
   keterangan    String
   type          Type     @relation(fields: [type_id], references: [id])
   type_id        String   @db.ObjectId
+  date        DateTime
   createdAt     DateTime @default(now())
   updatedAt     DateTime @default(now())
 }

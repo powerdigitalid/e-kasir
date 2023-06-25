@@ -2,7 +2,7 @@ import { prisma } from "../../../libs/prisma.libs.js";
 
 export default async function handler(req, res) {
     //create keuangan include type
-    const { type_id, jumlah_uang, keterangan, pembayaran } = req.body;
+    const { type_id, jumlah_uang, keterangan, pembayaran, date } = req.body;
     try {
         const keuangan = await prisma.keuangan.create({
             data: {
@@ -10,6 +10,7 @@ export default async function handler(req, res) {
                 jumlah_uang: parseInt(jumlah_uang),
                 keterangan: keterangan,
                 pembayaran: pembayaran,
+                date: date,
             },
         });
         res.status(201).json({
