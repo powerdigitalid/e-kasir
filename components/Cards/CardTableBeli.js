@@ -1,9 +1,33 @@
 import React from "react";
 import PropTypes from "prop-types";
-
+import {useState, useEffect} from 'react'
 // components
 
 export default function CardTableBeli({ color }) {
+  const [transaksi, setTransaksi] = useState([]);
+  const [error, setError] = useState("");
+  const [loading, setLoading] = useState(true);
+
+  const fetchTransaksi = () => {
+    fetch("/api/transaksi/beli", {
+      method: "GET",
+    })
+      .then((res) => res.json())
+      .then((res) => {
+        if (res.data) {
+          setTransaksi(res.data);
+          setLoading(false);
+        } else {
+          alert("Gagal mengambil data");
+          console.log(res);
+        }
+      });
+  };
+
+  useEffect(() => {
+    fetchTransaksi();
+  }, []);
+
   return (
     <>
       <div
@@ -86,22 +110,24 @@ export default function CardTableBeli({ color }) {
                 </th>
               </tr>
             </thead>
+            {transaksi.length > 0 ? ( 
+              transaksi.map((item, index) => (
             <tbody>
-              <tr>
+              <tr key={index}>
                 <td className="border-t-0 px-6 align-middle border-l-0 border-r-0 text-xm whitespace-nowrap p-4">
-                  1
+                  {index + 1}
                 </td>
                 <td className="border-t-0 px-6 align-middle border-l-0 border-r-0 text-xm whitespace-nowrap p-4">
-                  27/06/2023
+                {new Date(item.date).toLocaleDateString()}
                 </td>
                 <td className="border-t-0 px-6 align-middle border-l-0 border-r-0 text-xm whitespace-nowrap p-4">
-                  produk A
+                  {item.product.product_name}
                 </td>
                 <td className="border-t-0 px-6 align-middle border-l-0 border-r-0 text-xm whitespace-nowrap p-4">
-                  4
+                  {item.quantity}
                 </td>
                 <td className="border-t-0 px-6 align-middle border-l-0 border-r-0 text-xm whitespace-nowrap p-4">
-                  Rp. 100.000
+                  Rp. {item.total}
                 </td>
                 <td className="border-t-0 px-6 align-middle border-l-0 border-r-0 text-xm whitespace-nowrap p-4">
                   <button
@@ -113,6 +139,16 @@ export default function CardTableBeli({ color }) {
                 </td>
               </tr>
             </tbody>
+            ))
+            ) : (
+              <tbody>
+                <tr>
+                  <td colSpan="6" className="text-center p-4">
+                    Tidak ada data
+                  </td>
+                </tr>
+              </tbody>
+            )}
           </table>
         </div>
       </div>

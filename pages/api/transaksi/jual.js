@@ -28,8 +28,8 @@ export default async function handler(req, res) {
         return res.status(400).json({ error: "Stok produk tidak mencukupi" });
       }
 
-      // Tambahkan data transaksi_beli
-      const newTransaction = await prisma.transaksi_beli.create({
+      // Tambahkan data transaksi_jual
+      const newTransaction = await prisma.transaksi_jual.create({
         data: {
           product_id: String(product_id),
           quantity,
@@ -42,7 +42,7 @@ export default async function handler(req, res) {
       await prisma.product.update({
         where: { id: String(product_id) },
         data: {
-          product_stock: product.product_stock + quantity,
+          product_stock: product.product_stock - quantity,
         },
       });
 
@@ -53,7 +53,7 @@ export default async function handler(req, res) {
     }
   } else if (req.method === "GET") {
     try {
-      const data = await prisma.transaksi_beli.findMany({
+      const data = await prisma.transaksi_jual.findMany({
         orderBy: { date: "desc" },
         include: {
           product: true,

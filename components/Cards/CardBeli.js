@@ -1,15 +1,13 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import { useRouter } from "next/router";
-import { useState, useEffect } from "react";
-// components
 
 export default function CardBeli() {
   const router = useRouter();
   const [product_id, setProduct_id] = useState("");
   const [product, setProduct] = useState([]);
-  const [loading, setLoading] = useState(false);
   const [quantity, setQuantity] = useState("");
-  const [total, setTotal] = useState("");
+  const [total, setTotal] = useState(0)
+  const [error, setError] = useState("");
 
   const fetchProduk = () => {
     fetch("/api/produk/all", {
@@ -26,39 +24,40 @@ export default function CardBeli() {
       });
   };
 
+
   const handleAdd = (e) => {
     e.preventDefault();
-    const data = {
-      product_id: product_id,
-      quantity: product.data + quantity,
-      total: quantity * product.product_price,
-    };
-    if (!product_id || !quantity) {
-      alert("Semua data harus diisi");
-    } else {
-      fetch("/api/transaksi/beli", {
-        method: "POST",
-        body: JSON.stringify(data),
-        headers: {
-          "Content-Type": "application/json",
-        },
-      })
-        .then((res) => res.json())
-        .then((res) => {
-          if (res.data) {
-            alert("Berhasil menambahkan transaksi");
-            setLoading(true);
-          } else {
-            alert("Gagal menambahkan transaksi");
-            console.log(res);
-          }
-        });
+
+    const data ={
+      product_id : product_id,
+      quantity : parseInt(quantity),
+      total : parseInt(total),
+      date : new Date()
     }
+    fetch("/api/transaksi/beli", {
+      method: "POST",
+      body: JSON.stringify(data),
+      headers: {
+        "Content-Type": "application/json",
+      },
+    }).then((res) => {
+      if (res.status === 200) {
+        alert("Berhasil menambahkan data");
+        router.push("/admin/transaksi-beli");
+      } else {
+        alert("Gagal menambahkan data");
+        console.log(res);
+      }
+    });
   };
+
+
+
 
   useEffect(() => {
     fetchProduk();
   }, []);
+
   return (
     <>
       <div className="relative flex flex-col min-w-0 break-words w-full mb-6 shadow-lg rounded-lg bg-blueGray-100 border-0">
@@ -81,13 +80,16 @@ export default function CardBeli() {
                   >
                     Pilih produk
                   </label>
-                  <select className="border-0 px-2 py-2 placeholder-blueGray-300 text-blueGray-600 bg-white rounded text-sm shadow focus:outline-none focus:ring w-full ease-linear transition-all duration-150"
-                  onChange={(e) => setProduct_id(e.target.value)}
+                  <select
+                    className="border-0 px-2 py-2 placeholder-blueGray-300 text-blueGray-600 bg-white rounded text-sm shadow focus:outline-none focus:ring w-full ease-linear transition-all duration-150"
+                    value={product_id}
+                    onChange={(e) => setProduct_id(e.target.value)}
                   >
                     <option value="">Pilih produk</option>
                     {product.map((item, index) => (
                       <option key={index} value={item.id}>
-                        {item.product_name} - Stock {item.product_stock} - Rp.{item.product_price}
+                        {item.product_name} - Stock {item.product_stock} - Rp.
+                        {item.product_price}
                       </option>
                     ))}
                   </select>
@@ -105,6 +107,7 @@ export default function CardBeli() {
                     type="number"
                     className="border-0 px-2 py-2 placeholder-blueGray-300 text-blueGray-600 bg-white rounded text-sm shadow focus:outline-none focus:ring w-full ease-linear transition-all duration-150"
                     placeholder="QTY"
+                    value={quantity}
                     onChange={(e) => setQuantity(e.target.value)}
                   />
                 </div>
@@ -117,9 +120,18 @@ export default function CardBeli() {
                   >
                     Total :
                   </label>
-                  <h3 className="text-blueGray-700 text-xl font-bold">Rp. {total}</h3>
+                  <h3 className="text-blueGray-700 text-xl font-bold" onChange={(e) => setTotal(e.target.value)}>
+                    Rp. {total}
+                  </h3>
                 </div>
               </div>
+              {error && (
+                <div className="w-full lg:w-12/12 px-4">
+                  <div className="relative w-full mb-3">
+                    <span className="text-red-500 text-sm">{error}</span>
+                  </div>
+                </div>
+              )}
               <div className="w-full lg:w-6/12 px-4">
                 <div className="relative w-full mb-3">
                   <button
