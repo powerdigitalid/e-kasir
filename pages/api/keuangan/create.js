@@ -6,11 +6,7 @@ export default async function handler(req, res) {
     try {
         const keuangan = await prisma.keuangan.create({
             data: {
-                type: {
-                    connect: {
-                        id: type_id,
-                    },
-                },
+                type_id: type_id,
                 jumlah_uang: parseInt(jumlah_uang),
                 keterangan: keterangan,
                 pembayaran: pembayaran,
