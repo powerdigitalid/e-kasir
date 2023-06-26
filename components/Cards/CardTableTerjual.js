@@ -24,6 +24,21 @@ export default function CardTableTerjual({ color }) {
       });
   };
 
+  const handleDelete = (id) => {
+    fetch(`/api/transaksi/actionJual?id=${id}`, {
+        method: "DELETE",
+    })
+    .then((res) => res.json())
+    .then((res) => {
+        if (res.data) {
+            alert("Berhasil menghapus transaksi beli");
+            fetchTransaksi();
+        } else {
+            alert("Gagal menghapus transaksi beli");
+        }
+    })
+};
+
   useEffect(() => {
     fetchTransaksi();
   }, []);
@@ -132,8 +147,9 @@ export default function CardTableTerjual({ color }) {
                   <button
                     className="bg-red-700 active:bg-red-600 text-white font-bold uppercase text-xs px-4 py-2 rounded shadow hover:shadow-md outline-none focus:outline-none mr-1 ease-linear transition-all duration-150"
                     type="button"
+                    onClick={() => handleDelete(item.id)}
                   >
-                    <i className="fas fa-trash"></i>s
+                    <i className="fas fa-trash"></i>
                   </button>
                 </td>
               </tr>

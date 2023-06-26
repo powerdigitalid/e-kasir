@@ -2,7 +2,7 @@ import React from "react";
 
 // components
 
-import CardTambahTipetransaksi from "components/Cards/CardTambahTipeTransaksi";
+import CardTambahTipetransaksi from "components/Cards/CardTambahTipetransaksi.js";
 
 // layout for page
 

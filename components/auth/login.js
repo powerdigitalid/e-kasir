@@ -1,13 +1,49 @@
-import React from "react";
-import Link from "next/link";
+import React, {useState} from 'react';
+import {useRouter} from 'next/router';
+import {setCookie} from '../../libs/cookie.lib';
+// import Link from "next/link";
 
 // layout for page
 import Auth from "layouts/Auth";
 
 
-
-
 export default function Login() {
+    const [username, setUsername] = useState('');
+  const [password, setPassword] = useState('');
+  const [loading, setLoading] = useState(false)
+  const [error, setError] = useState("")
+  const router = useRouter();
+
+  const handleLogin = (e) =>{
+    e.preventDefault();
+    setLoading(true);
+    fetch('api/auth/login', {
+      method: "POST",
+      headers:{
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify({
+        username,
+        password
+      }),
+    })
+    .then((res) => res.json())
+    .then((data) => {
+      if(data.message === "Login success" && data.user.token){
+        alert("Login Success!", "Login Success Redirected in 3 second!", "success");
+        setCookie("token", data.user.token, 1);
+        router.push("/admin/dashboard");
+      } else {
+        setError(data.message);
+      }
+      setLoading(false);
+    })
+    .catch((err) => {
+      setError(err);
+      alert("Login Failed!", "Login Failed Redirected in 3 secon!" + err, "error");
+      setLoading(false)
+    });
+  };
   return (
     <>
     <Auth>
@@ -55,6 +91,7 @@ export default function Login() {
                       type="text"
                       className="border-0 px-3 py-3 placeholder-blueGray-300 text-blueGray-600 bg-white rounded text-sm shadow focus:outline-none focus:ring w-full ease-linear transition-all duration-150"
                       placeholder="Username"
+                      value={username} onChange={(e)=> setUsername(e.target.value)}
                     />
                   </div>
 
@@ -69,6 +106,7 @@ export default function Login() {
                       type="password"
                       className="border-0 px-3 py-3 placeholder-blueGray-300 text-blueGray-600 bg-white rounded text-sm shadow focus:outline-none focus:ring w-full ease-linear transition-all duration-150"
                       placeholder="Password"
+                      value={password} onChange={(e)=> setPassword(e.target.value)}
                     />
                   </div>
                   {/* <div>
@@ -87,7 +125,8 @@ export default function Login() {
                   <div className="text-center mt-6">
                     <button
                       className="bg-blueGray-800 text-white active:bg-blueGray-600 text-sm font-bold uppercase px-6 py-3 rounded shadow hover:shadow-lg outline-none focus:outline-none mr-1 mb-1 w-full ease-linear transition-all duration-150"
-                      type="button"
+                      type="submit"
+                      onClick={handleLogin}
                     >
                       LOGIN
                     </button>

@@ -1,12 +1,14 @@
 import React from "react";
 import PropTypes from "prop-types";
 import {useState, useEffect} from 'react'
+import { useRouter } from "next/router";
 // components
 
 export default function CardTableBeli({ color }) {
-  const [transaksi, setTransaksi] = useState([]);
+  const [data, setData] = useState([]);
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(true);
+  const router = useRouter();
 
   const fetchTransaksi = () => {
     fetch("/api/transaksi/beli", {
@@ -15,7 +17,7 @@ export default function CardTableBeli({ color }) {
       .then((res) => res.json())
       .then((res) => {
         if (res.data) {
-          setTransaksi(res.data);
+          setData(res.data);
           setLoading(false);
         } else {
           alert("Gagal mengambil data");
@@ -23,6 +25,21 @@ export default function CardTableBeli({ color }) {
         }
       });
   };
+
+  const handleDelete = (id) => {
+    fetch(`/api/transaksi/actionBeli?id=${id}`, {
+        method: "DELETE",
+    })
+    .then((res) => res.json())
+    .then((res) => {
+        if (res.data) {
+            alert("Berhasil menghapus transaksi beli");
+            fetchTransaksi();
+        } else {
+            alert("Gagal menghapus transaksi beli");
+        }
+    })
+};
 
   useEffect(() => {
     fetchTransaksi();
@@ -110,8 +127,8 @@ export default function CardTableBeli({ color }) {
                 </th>
               </tr>
             </thead>
-            {transaksi.length > 0 ? ( 
-              transaksi.map((item, index) => (
+            {data.length > 0 ? ( 
+              data.map((item, index) => (
             <tbody>
               <tr key={index}>
                 <td className="border-t-0 px-6 align-middle border-l-0 border-r-0 text-xm whitespace-nowrap p-4">
@@ -133,6 +150,7 @@ export default function CardTableBeli({ color }) {
                   <button
                     className="bg-red-700 active:bg-red-600 text-white font-bold uppercase text-xs px-4 py-2 rounded shadow hover:shadow-md outline-none focus:outline-none mr-1 ease-linear transition-all duration-150"
                     type="button"
+                    onClick={() => handleDelete(item.id)}
                   >
                     <i className="fas fa-trash"></i>
                   </button>
