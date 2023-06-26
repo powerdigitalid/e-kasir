@@ -16,7 +16,7 @@ export default function Login() {
   const handleLogin = (e) => {
     e.preventDefault();
     setLoading(true);
-    fetch("https://e-kasir.vercel.app/api/auth/login", {
+    fetch("/api/auth/login", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
