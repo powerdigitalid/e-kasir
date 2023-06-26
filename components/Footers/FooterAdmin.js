@@ -25,7 +25,7 @@ export default function FooterAdmin() {
                     href="https://powerdigital.id/"
                     className="text-blueGray-600 hover:text-blueGray-800 text-sm font-semibold block py-1 px-3"
                   >
-                    Power Digi Technology
+                    Power Digital Technology
                   </a>
                 </li>
                 <li>
