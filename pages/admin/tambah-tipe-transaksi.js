@@ -2,7 +2,7 @@ import React from "react";
 
 // components
 
-import CardTambahTipetransaksi from "components/Cards/CardTambahTipetransaksi.js";
+import CardTambahTipeTransaksi from "components/Cards/CardTambahTipeTransaksi.js";
 
 // layout for page
 
@@ -13,7 +13,7 @@ export default function CardTambahTipetransaksiPages() {
     <>
       <div className="flex flex-wrap">
         <div className="w-full lg:w-12/12 px-4">
-          <CardTambahTipetransaksi />
+          <CardTambahTipeTransaksi />
         </div>
       </div>
     </>
