@@ -3,6 +3,7 @@ import React from "react";
 import PropTypes from "prop-types";
 import {useState, useEffect} from 'react'
 import {useRouter} from 'next/router'
+import {moneyFormat} from "../../helpers/index";
 
 // components
 
@@ -141,7 +142,7 @@ export default function CardTableProduct({ color }) {
                   {item.product_name}
                 </td>
                 <td className="border-t-0 px-6 align-middle border-l-0 border-r-0 text-xm whitespace-nowrap p-4">
-                  Rp. {item.product_price}
+                  {moneyFormat(item.product_price)}
                 </td>
                 <td className="border-t-0 px-6 align-middle border-l-0 border-r-0 text-xm whitespace-nowrap p-4">
                   {item.product_stock}

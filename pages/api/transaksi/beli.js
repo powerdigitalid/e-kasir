@@ -33,7 +33,7 @@ export default async function handler(req, res) {
         data: {
           product_id: String(product_id),
           quantity,
-          total,
+          total : parseInt(quantity) * parseInt(product.product_price),
           date: new Date(),
         },
       });

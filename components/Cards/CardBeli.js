@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { useRouter } from "next/router";
+import {moneyFormat} from "../../helpers/index";
 
 export default function CardBeli() {
   const router = useRouter();
@@ -88,8 +89,8 @@ export default function CardBeli() {
                     <option value="">Pilih produk</option>
                     {product.map((item, index) => (
                       <option key={index} value={item.id}>
-                        {item.product_name} - Stock {item.product_stock} - Rp.
-                        {item.product_price}
+                        {item.product_name} - Stock {item.product_stock} -
+                        {moneyFormat(item.product_price)}
                       </option>
                     ))}
                   </select>
@@ -120,7 +121,7 @@ export default function CardBeli() {
                   >
                     Total :
                   </label>
-                  <h3 className="text-blueGray-700 text-xl font-bold" onChange={(e) => setTotal(e.target.value)}>
+                  <h3 className="text-blueGray-700 text-xl font-bold" >
                     Rp. {total}
                   </h3>
                 </div>

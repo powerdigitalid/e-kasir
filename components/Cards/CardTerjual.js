@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { useRouter } from "next/router";
+import {moneyFormat} from "../../helpers/index";
 // components
 
 export default function CardTerjual() {
@@ -88,7 +89,7 @@ export default function CardTerjual() {
                     {product.map((item, index) => (
                       <option key={index} value={item.id}>
                         {item.product_name} - Stock {item.product_stock} - Rp.
-                        {item.product_price}
+                        {moneyFormat(item.product_price)}
                       </option>
                     ))}
                   </select>
