@@ -13,7 +13,7 @@ export default function handler(req, res){
       .then(async user => {
         if(user){
           if(user.password === password){
-            const secret = new TextEncoder().encode(process.env.NEXT_PUBLIC_JWT_SECRET);
+            const secret = new TextEncoder().encode(process.env.NEXT_SECRET);
             let token = await new jose.SignJWT({id: user.id, username: user.username}).setProtectedHeader({alg: 'HS256'}).sign(secret);
             res.status(200).json({
               message: 'Login success',

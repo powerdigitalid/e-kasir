@@ -28,7 +28,7 @@ export function removeCookie(cookieName) {
 }
 
 export async function validateToken(token) {
-  const secret = new TextEncoder().encode(process.env.NEXT_PUBLIC_JWT_SECRET);
+  const secret = new TextEncoder().encode(process.env.NEXT_PUBLIC_SECRET);
   if(token){
     const {payload} = await jose.jwtVerify(token, secret);
     if (payload) {
