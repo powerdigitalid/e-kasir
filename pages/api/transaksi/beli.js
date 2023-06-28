@@ -24,9 +24,9 @@ export default async function handler(req, res) {
       }
 
       // Cek apakah stock cukup
-      if (quantity > product.product_stock) {
-        return res.status(400).json({ error: "Stok produk tidak mencukupi" });
-      }
+      // if (quantity > product.product_stock) {
+      //   return res.status(400).json({ error: "Stok produk tidak mencukupi" });
+      // }
 
       // Tambahkan data transaksi_beli
       const newTransaction = await prisma.transaksi_beli.create({
