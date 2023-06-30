@@ -2,7 +2,7 @@ import React from "react";
 
 // components
 import CardLineChart from "components/Cards/CardLineChart.js";
-import CardCounterStats from "components/Cards/CardCounterStats";
+import CartTambah from "components/Cards/CartTambahLaba";
 // import {useEffect} from 'react'
 // import {getCookie, validateToken} from '../../libs/cookie.lib'
 import {useSession,signIn, signOut} from 'next-auth/react'
@@ -15,27 +15,18 @@ export default function Dashboard() {
   console.log(session)
 
 
-  if(session && session.user.email === "kimeee220801@gmail.com" ) {
     return (
       <>
       <div className="flex flex-wrap">
         <div className="w-full xl:w-12/12 mb-12 xl:mb-0 px-4">
-          <CardLineChart />
+          <CartTambah />
         </div>
         <div className="w-full xl:w-12/12 mb-12 xl:mb-0 px-4">
-          <CardCounterStats />
+          <CardLineChart />
         </div>
       </div>
     </>
     );
-  } else {
-    return (
-      <div>
-        <h1>Anda tidak memiliki akses</h1> 
-      signIn('/')
-      </div>
-    )
-  }
 }
 
 Dashboard.layout = Admin;

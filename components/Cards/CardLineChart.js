@@ -1,83 +1,151 @@
-import React from "react";
-import Chart from "chart.js";
+import React, { useEffect, useState, useRef } from 'react';
+import Chart from 'chart.js';
 
 export default function CardLineChart() {
-  React.useEffect(() => {
-    var config = {
-      type: "line",
-      data: {
-        labels: [
-          "January",
-          "February",
-          "March",
-          "April",
-          "May",
-          "June",
-          "July",
-          "August",
-          "September",
-          "October",
-          "November",
-          "December",
-        ],
-        datasets: [
-          {
-            label: new Date().getFullYear(),
-            backgroundColor: "#4c51bf",
-            borderColor: "#4c51bf",
-            data: [65, 78, 66, 44, 56, 67, 75, 23, 43, 55, 66, 200],
-            fill: false,
-          },
-          {
-            label: new Date().getFullYear() - 1,
-            fill: false,
-            backgroundColor: "#fff",
-            borderColor: "#fff",
-            data: [40, 68, 86, 74, 56, 60, 87, 45, 56, 67, 76, 87],
-          },
-        ],
+  const chartContainer = useRef(null);
+  const [chart, setChart] = useState(null);
+  const [data, setData] = useState({
+    labels: [],
+    datasets: [
+      {
+        label: 'Penjualan',
+        backgroundColor: '#4c51bf',
+        borderColor: '#4c51bf',
+        data: [],
+        fill: false,
       },
+      {
+        label: 'Pembelian',
+        backgroundColor: '#fca5a5',
+        borderColor: '#fca5a5',
+        data: [],
+        fill: false,
+      },
+    ],
+  });
+
+  useEffect(() => {
+    const fetchData = async () => {
+      const url1 = '/api/transaksi/jual';
+      const url2 = '/api/transaksi/beli';
+      const dataMap = {};
+      const labelSet = [];
+
+      const fetchJual = fetch(url1).then((res) => res.json());
+      const fetchPembelian = fetch(url2).then((res) => res.json());
+
+      await Promise.all([fetchJual, fetchPembelian])
+        .then((responses) => {
+          const responseJual = responses[0];
+          const responsePembelian = responses[1];
+
+          if (Array.isArray(responseJual.data) && Array.isArray(responsePembelian.data)) {
+            responseJual.data.forEach((val) => {
+              const productName = val.product.product_name;
+              const date = val.date;
+              const quantity = val.total;
+
+              if (!dataMap[productName]) {
+                dataMap[productName] = { labels: [], penjualan: [], pembelian: [] };
+              }
+
+              dataMap[productName].labels.push(new Date(date).toLocaleDateString());
+              dataMap[productName].penjualan.push(quantity);
+            });
+
+            responsePembelian.data.forEach((val) => {
+              const productName = val.product.product_name;
+              const date = val.date;
+              const quantity = val.total;
+
+              if (!dataMap[productName]) {
+                dataMap[productName] = { labels: [], penjualan: [], pembelian: [] };
+              }
+
+              dataMap[productName].labels.push(new Date(date).toLocaleDateString());
+              dataMap[productName].pembelian.push(quantity);
+            });
+
+            let colorIndex = 0;
+            for (const productName in dataMap) {
+              if (dataMap.hasOwnProperty(productName)) {
+                const productData = dataMap[productName];
+                labelSet.push(...productData.labels);
+                data.datasets[0].data.push(...productData.penjualan);
+                data.datasets[1].data.push(...productData.pembelian);
+                colorIndex++;
+              }
+            }
+
+            const newChartData = {
+              ...data,
+              labels: labelSet,
+            };
+            setData(newChartData);
+          } else {
+            console.error('Invalid data format:', responseJual, responsePembelian);
+          }
+        })
+        .catch((error) => {
+          console.error('Error fetching data:', error);
+        });
+    };
+    fetchData();
+  }, []);
+
+  useEffect(() => {
+    if (chart) {
+      chart.destroy();
+    }
+    createChart(data);
+  }, [data]);
+
+  const createChart = (chartData) => {
+    const ctx = chartContainer.current.getContext('2d');
+    const newChart = new Chart(ctx, {
+      type: 'line',
+      data: chartData,
       options: {
         maintainAspectRatio: false,
         responsive: true,
         title: {
           display: false,
-          text: "Sales Charts",
-          fontColor: "white",
+          text: 'Sales Charts',
+          fontColor: 'white',
         },
         legend: {
           labels: {
-            fontColor: "white",
+            fontColor: 'white',
           },
-          align: "end",
-          position: "bottom",
+          align: 'end',
+          position: 'bottom',
         },
         tooltips: {
-          mode: "index",
+          mode: 'index',
           intersect: false,
         },
         hover: {
-          mode: "nearest",
+          mode: 'nearest',
           intersect: true,
         },
         scales: {
           xAxes: [
             {
               ticks: {
-                fontColor: "rgba(255,255,255,.7)",
+                fontColor: 'rgba(255,255,255,.7)',
               },
               display: true,
               scaleLabel: {
                 display: false,
-                labelString: "Month",
-                fontColor: "white",
+                labelString: 'Month',
+                fontColor: 'white',
               },
               gridLines: {
                 display: false,
                 borderDash: [2],
                 borderDashOffset: [2],
-                color: "rgba(33, 37, 41, 0.3)",
-                zeroLineColor: "rgba(0, 0, 0, 0)",
+                color: 'rgba(33, 37, 41, 0.3)',
+                zeroLineColor: 'rgba(0, 0, 0, 0)',
                 zeroLineBorderDash: [2],
                 zeroLineBorderDashOffset: [2],
               },
@@ -86,20 +154,20 @@ export default function CardLineChart() {
           yAxes: [
             {
               ticks: {
-                fontColor: "rgba(255,255,255,.7)",
+                fontColor: 'rgba(255,255,255,.7)',
               },
               display: true,
               scaleLabel: {
                 display: false,
-                labelString: "Value",
-                fontColor: "white",
+                labelString: 'Value',
+                fontColor: 'white',
               },
               gridLines: {
                 borderDash: [3],
                 borderDashOffset: [3],
                 drawBorder: false,
-                color: "rgba(255, 255, 255, 0.15)",
-                zeroLineColor: "rgba(33, 37, 41, 0)",
+                color: 'rgba(255, 255, 255, 0.15)',
+                zeroLineColor: 'rgba(33, 37, 41, 0)',
                 zeroLineBorderDash: [2],
                 zeroLineBorderDashOffset: [2],
               },
@@ -107,10 +175,9 @@ export default function CardLineChart() {
           ],
         },
       },
-    };
-    var ctx = document.getElementById("line-chart").getContext("2d");
-    window.myLine = new Chart(ctx, config);
-  }, []);
+    });
+    setChart(newChart);
+  };
 
   return (
     <>
@@ -119,29 +186,24 @@ export default function CardLineChart() {
           <div className="flex flex-wrap items-center">
             <div className="relative w-full max-w-full flex-grow flex-1">
               <h2 className="text-white text-xl font-semibold">Sales value</h2>
-              <div
-                className="flex flex-row mt-3"
-                >
-                <h6 className="text-blueGray-100 mb-1 text-xs font-semibold mr-1 mt-3 ">
+              <div className="flex flex-row mt-3">
+                <h6 className="text-blueGray-100 mb-1 text-xs font-semibold mr-1 mt-3">
                   Date Range :
                 </h6>
-
                 <input
                   type="date"
                   id="date1"
                   className="dark-input p-2 rounded w-1/3"
-                  style={{ backgroundColor: "#4B5563", color: "#F9FAFB" }}
+                  style={{ backgroundColor: '#4B5563', color: '#F9FAFB' }}
                 />
-
                 <p className="uppercase text-blueGray-100 mb-1 text-xs font-semibold ml-1 mr-1 mt-3 w-1/3">
                   -
                 </p>
-
                 <input
                   type="date"
                   id="date2"
                   className="dark-input p-2 rounded w-1/3"
-                  style={{ backgroundColor: "#4B5563", color: "#F9FAFB" }}
+                  style={{ backgroundColor: '#4B5563', color: '#F9FAFB' }}
                 />
               </div>
             </div>
@@ -150,7 +212,7 @@ export default function CardLineChart() {
         <div className="p-4 flex-auto">
           {/* Chart */}
           <div className="relative h-350-px">
-            <canvas id="line-chart"></canvas>
+            <canvas ref={chartContainer} id="line-chart"></canvas>
           </div>
         </div>
       </div>
