@@ -3,22 +3,21 @@ import React from "react";
 // components
 import CardLineChart from "components/Cards/CardLineChart.js";
 import CardCounterStats from "components/Cards/CardCounterStats";
-import {useEffect} from 'react'
-import {getCookie, validateToken} from '../../libs/cookie.lib'
+// import {useEffect} from 'react'
+// import {getCookie, validateToken} from '../../libs/cookie.lib'
+import {useSession,signIn, signOut} from 'next-auth/react'
 
 // layout for page
 import Admin from "layouts/Admin.js";
 
 export default function Dashboard() {
-  useEffect(() => {
-    if(getCookie('token') === "" && getCookie("username") === ""){
-      window.location.href = "/";
-    }else{
-      validateToken(getCookie('token')) ? null : window.location.href = "/";
-    }
-  }, [])
-  return (
-    <>
+  const {data: session, status} = useSession()
+  console.log(session)
+
+
+  if(session && session.user.email === "kimeee220801@gmail.com" ) {
+    return (
+      <>
       <div className="flex flex-wrap">
         <div className="w-full xl:w-12/12 mb-12 xl:mb-0 px-4">
           <CardLineChart />
@@ -27,11 +26,16 @@ export default function Dashboard() {
           <CardCounterStats />
         </div>
       </div>
-      <div className="flex flex-wrap mt-4">
-        
-      </div>
     </>
-  );
+    );
+  } else {
+    return (
+      <div>
+        <h1>Anda tidak memiliki akses</h1> 
+      signIn('/')
+      </div>
+    )
+  }
 }
 
 Dashboard.layout = Admin;

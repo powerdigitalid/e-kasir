@@ -3,7 +3,7 @@ import ReactDOM from "react-dom";
 import App from "next/app";
 import Head from "next/head";
 import Router from "next/router";
-
+import {SessionProvider} from "next-auth/react"
 import PageChange from "components/PageChange/PageChange.js";
 
 import "@fortawesome/fontawesome-free/css/all.min.css";
@@ -64,6 +64,7 @@ export default class MyApp extends App {
     const Layout = Component.layout || (({ children }) => <>{children}</>);
 
     return (
+      <SessionProvider session={pageProps.session}>
       <React.Fragment>
         <Head>
           <meta
@@ -77,6 +78,7 @@ export default class MyApp extends App {
           <Component {...pageProps} />
         </Layout>
       </React.Fragment>
+      </SessionProvider>
     );
   }
 }
