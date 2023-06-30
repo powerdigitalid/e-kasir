@@ -1,26 +1,39 @@
-import React from "react";
-import { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useRouter } from "next/router";
-
-// components
+import {moneyFormat} from "../../helpers/index";
 
 export default function CardTambahLaba() {
-  const [product_name, setProduct_name] = useState("");
-  const [product_price, setProduct_price] = useState("");
-  const [product_stock, setProduct_stock] = useState("");
+  const [total_pemasukan, setTotalPemasukan] = useState("");
+  const [total_pengeluaran, setTotalPengeluaran] = useState("");
+  const [total_laba, setTotalLaba] = useState("");
+  const [date, setDate] = useState("");
   const router = useRouter();
+
+  useEffect(() => {
+    const calculateTotalLaba = () => {
+      if (total_pemasukan && total_pengeluaran) {
+        const laba = parseFloat(total_pemasukan) - parseFloat(total_pengeluaran);
+        setTotalLaba(laba.toFixed(2));
+      } else {
+        setTotalLaba("");
+      }
+    };
+
+    calculateTotalLaba();
+  }, [total_pemasukan, total_pengeluaran]);
 
   const handleAdd = (e) => {
     e.preventDefault();
-    if(!product_name || !product_price || !product_stock){
-      alert('Semua data harus diisi')
-    }else{
-      fetch("/api/produk/create", {
+    if (!total_pemasukan || !total_pengeluaran || !date) {
+      alert("Semua data harus diisi");
+    } else {
+      fetch("/api/hitung/create", {
         method: "POST",
         body: JSON.stringify({
-          product_name: product_name,
-          product_price: product_price,
-          product_stock: product_stock,
+          total_pemasukan: total_pemasukan,
+          total_pengeluaran: total_pengeluaran,
+          total_laba: total_laba,
+          date: date,
         }),
         headers: {
           "Content-Type": "application/json",
@@ -29,11 +42,10 @@ export default function CardTambahLaba() {
         .then((res) => res.json())
         .then((res) => {
           if (res.data) {
-            alert("Berhasil menambahkan produk");
-            router.push("/admin/products");
+            alert("Berhasil menambahkan data Amount");
+            router.push("/admin/dashboard");
           } else {
-
-            alert("Gagal menambahkan produk");
+            alert("Gagal menambahkan dashboard");
           }
         });
     }
@@ -64,7 +76,7 @@ export default function CardTambahLaba() {
                   <input
                     type="text"
                     className="border-0 px-2 py-2 placeholder-blueGray-300 text-blueGray-600 bg-white rounded text-sm shadow focus:outline-none focus:ring w-full ease-linear transition-all duration-150"
-                    onChange={(e) => setProduct_name(e.target.value)}
+                    onChange={(e) => setTotalPemasukan(e.target.value)}
                   />
                 </div>
               </div>
@@ -79,7 +91,7 @@ export default function CardTambahLaba() {
                   <input
                     type="number"
                     className="border-0 px-2 py-2 placeholder-blueGray-300 text-blueGray-600 bg-white rounded text-sm shadow focus:outline-none focus:ring w-full ease-linear transition-all duration-150"
-                    onChange={(e) => setProduct_price(e.target.value)}
+                    onChange={(e) => setTotalPengeluaran(e.target.value)}
                   />
                 </div>
               </div>
@@ -94,7 +106,7 @@ export default function CardTambahLaba() {
                   <input
                     type="date"
                     className="border-0 px-2 py-2 placeholder-blueGray-300 text-blueGray-600 bg-white rounded text-sm shadow focus:outline-none focus:ring w-full ease-linear transition-all duration-150"
-                    onChange={(e) => setProduct_price(e.target.value)}
+                    onChange={(e) => setDate(e.target.value)}
                   />
                 </div>
               </div>
@@ -109,7 +121,8 @@ export default function CardTambahLaba() {
                   <input
                     type="number"
                     className="border-0 px-2 py-2 placeholder-blueGray-300 text-blueGray-600 bg-white rounded text-sm shadow focus:outline-none focus:ring w-full ease-linear transition-all duration-150"
-                    onChange={(e) => setProduct_stock(e.target.value)}
+                    value={total_laba}
+                    disabled
                   />
                 </div>
               </div>
@@ -119,7 +132,7 @@ export default function CardTambahLaba() {
                     className="bg-blueGray-700 active:bg-blueGray-600 text-white font-bold uppercase text-xs px-4 py-2 rounded shadow hover:shadow-md outline-none focus:outline-none mr-1 ease-linear transition-all duration-150"
                     type="submit"
                   >
-                    Tambah 
+                    Tambah
                   </button>
                 </div>
               </div>
