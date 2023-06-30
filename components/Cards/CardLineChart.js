@@ -21,6 +21,13 @@ export default function CardLineChart() {
         data: [],
         fill: false,
       },
+      {
+        label: 'Laba',
+        backgroundColor: '#38b2ac',
+        borderColor: '#38b2ac',
+        data: [],
+        fill: false,
+      },
     ],
   });
 
@@ -28,16 +35,19 @@ export default function CardLineChart() {
     const fetchData = async () => {
       const url1 = '/api/transaksi/jual';
       const url2 = '/api/transaksi/beli';
+      const url3 = '/api/hitung/all';
       const dataMap = {};
       const labelSet = [];
 
       const fetchJual = fetch(url1).then((res) => res.json());
       const fetchPembelian = fetch(url2).then((res) => res.json());
+      const fetchLaba = fetch(url3).then((res) => res.json());
 
-      await Promise.all([fetchJual, fetchPembelian])
+      await Promise.all([fetchJual, fetchPembelian, fetchLaba])
         .then((responses) => {
           const responseJual = responses[0];
           const responsePembelian = responses[1];
+          const responseLaba = responses[2];
 
           if (Array.isArray(responseJual.data) && Array.isArray(responsePembelian.data)) {
             responseJual.data.forEach((val) => {
@@ -46,7 +56,7 @@ export default function CardLineChart() {
               const quantity = val.total;
 
               if (!dataMap[productName]) {
-                dataMap[productName] = { labels: [], penjualan: [], pembelian: [] };
+                dataMap[productName] = { labels: [], penjualan: [], pembelian: [], laba: [] };
               }
 
               dataMap[productName].labels.push(new Date(date).toLocaleDateString());
@@ -59,11 +69,22 @@ export default function CardLineChart() {
               const quantity = val.total;
 
               if (!dataMap[productName]) {
-                dataMap[productName] = { labels: [], penjualan: [], pembelian: [] };
+                dataMap[productName] = { labels: [], penjualan: [], pembelian: [], laba: [] };
               }
 
               dataMap[productName].labels.push(new Date(date).toLocaleDateString());
               dataMap[productName].pembelian.push(quantity);
+            });
+
+            responseLaba.data.forEach((val) => {
+              const date = val.date;
+              const quantity = val.total_laba;
+              if (!dataMap['laba']) {
+                dataMap['laba'] = { labels: [], penjualan: [], pembelian: [], laba: [] };
+              }
+
+              dataMap['laba'].labels.push(new Date(date).toLocaleDateString());
+              dataMap['laba'].laba.push(quantity);
             });
 
             let colorIndex = 0;
@@ -73,6 +94,7 @@ export default function CardLineChart() {
                 labelSet.push(...productData.labels);
                 data.datasets[0].data.push(...productData.penjualan);
                 data.datasets[1].data.push(...productData.pembelian);
+                data.datasets[2].data.push(...productData.laba); // Menambahkan data laba
                 colorIndex++;
               }
             }
@@ -108,71 +130,61 @@ export default function CardLineChart() {
       options: {
         maintainAspectRatio: false,
         responsive: true,
-        title: {
-          display: false,
-          text: 'Sales Charts',
-          fontColor: 'white',
-        },
-        legend: {
-          labels: {
-            fontColor: 'white',
+        plugins: {
+          legend: {
+            labels: {
+              color: 'white',
+            },
+            align: 'end',
+            position: 'bottom',
           },
-          align: 'end',
-          position: 'bottom',
-        },
-        tooltips: {
-          mode: 'index',
-          intersect: false,
-        },
-        hover: {
-          mode: 'nearest',
-          intersect: true,
         },
         scales: {
-          xAxes: [
-            {
-              ticks: {
-                fontColor: 'rgba(255,255,255,.7)',
-              },
-              display: true,
-              scaleLabel: {
-                display: false,
-                labelString: 'Month',
-                fontColor: 'white',
-              },
-              gridLines: {
-                display: false,
-                borderDash: [2],
-                borderDashOffset: [2],
-                color: 'rgba(33, 37, 41, 0.3)',
-                zeroLineColor: 'rgba(0, 0, 0, 0)',
-                zeroLineBorderDash: [2],
-                zeroLineBorderDashOffset: [2],
+          x: {
+            ticks: {
+              color: 'rgba(255,255,255,.7)',
+            },
+            display: true,
+            title: {
+              display: false,
+              text: 'Date',
+              font: {
+                color: 'white',
               },
             },
-          ],
-          yAxes: [
-            {
-              ticks: {
-                fontColor: 'rgba(255,255,255,.7)',
-              },
-              display: true,
-              scaleLabel: {
-                display: false,
-                labelString: 'Value',
-                fontColor: 'white',
-              },
-              gridLines: {
-                borderDash: [3],
-                borderDashOffset: [3],
-                drawBorder: false,
-                color: 'rgba(255, 255, 255, 0.15)',
-                zeroLineColor: 'rgba(33, 37, 41, 0)',
-                zeroLineBorderDash: [2],
-                zeroLineBorderDashOffset: [2],
+            grid: {
+              display: false,
+              borderDash: [2],
+              borderDashOffset: [2],
+              color: 'rgba(33, 37, 41, 0.3)',
+              drawBorder: false,
+              zeroLineColor: 'rgba(0, 0, 0, 0)',
+              zeroLineBorderDash: [2],
+              zeroLineBorderDashOffset: [2],
+            },
+          },
+          y: {
+            ticks: {
+              color: 'rgba(255,255,255,.7)',
+            },
+            display: true,
+            title: {
+              display: false,
+              text: 'Value',
+              font: {
+                color: 'white',
               },
             },
-          ],
+            grid: {
+              borderDash: [3],
+              borderDashOffset: [3],
+              drawBorder: false,
+              color: 'rgba(255, 255, 255, 0.15)',
+              zeroLineColor: 'rgba(33, 37, 41, 0)',
+              zeroLineBorderDash: [2],
+              zeroLineBorderDashOffset: [2],
+            },
+          },
         },
       },
     });
