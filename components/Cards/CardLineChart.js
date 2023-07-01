@@ -52,39 +52,47 @@ export default function CardLineChart() {
           if (Array.isArray(responseJual.data) && Array.isArray(responsePembelian.data)) {
             responseJual.data.forEach((val) => {
               const productName = val.product.product_name;
-              const date = val.date;
+              const date = new Date(val.date);
+              const monthYear = `${date.toLocaleString('default', { month: 'short' })} ${date.getFullYear()}`;
               const quantity = val.total;
 
               if (!dataMap[productName]) {
                 dataMap[productName] = { labels: [], penjualan: [], pembelian: [], laba: [] };
               }
 
-              dataMap[productName].labels.push(new Date(date).toLocaleDateString());
+              dataMap[productName].labels.push(monthYear);
               dataMap[productName].penjualan.push(quantity);
             });
 
             responsePembelian.data.forEach((val) => {
               const productName = val.product.product_name;
-              const date = val.date;
+              const date = new Date(val.date);
+              const monthYear = `${date.toLocaleString('default', { month: 'short' })} ${date.getFullYear()}`;
               const quantity = val.total;
 
               if (!dataMap[productName]) {
                 dataMap[productName] = { labels: [], penjualan: [], pembelian: [], laba: [] };
               }
 
-              dataMap[productName].labels.push(new Date(date).toLocaleDateString());
+              dataMap[productName].labels.push(monthYear);
               dataMap[productName].pembelian.push(quantity);
             });
 
             responseLaba.data.forEach((val) => {
-              const date = val.date;
+              const date = new Date(val.date);
+              const monthYear = `${date.toLocaleString('default', { month: 'short' })} ${date.getFullYear()}`;
               const quantity = val.total_laba;
               if (!dataMap['laba']) {
                 dataMap['laba'] = { labels: [], penjualan: [], pembelian: [], laba: [] };
               }
 
-              dataMap['laba'].labels.push(new Date(date).toLocaleDateString());
-              dataMap['laba'].laba.push(quantity);
+              if (dataMap['laba'].labels.includes(monthYear)) {
+                const index = dataMap['laba'].labels.indexOf(monthYear);
+                dataMap['laba'].laba[index] += quantity;
+              } else {
+                dataMap['laba'].labels.push(monthYear);
+                dataMap['laba'].laba.push(quantity);
+              }
             });
 
             let colorIndex = 0;
@@ -191,6 +199,48 @@ export default function CardLineChart() {
     setChart(newChart);
   };
 
+  const handleFilterByYear = (year) => {
+    const filteredData = {
+      labels: [],
+      datasets: [
+        {
+          label: 'Penjualan',
+          backgroundColor: '#4c51bf',
+          borderColor: '#4c51bf',
+          data: [],
+          fill: false,
+        },
+        {
+          label: 'Pembelian',
+          backgroundColor: '#fca5a5',
+          borderColor: '#fca5a5',
+          data: [],
+          fill: false,
+        },
+        {
+          label: 'Laba',
+          backgroundColor: '#38b2ac',
+          borderColor: '#38b2ac',
+          data: [],
+          fill: false,
+        },
+      ],
+    };
+
+    for (let i = 0; i < data.labels.length; i++) {
+      const label = data.labels[i];
+      const yearFromLabel = Number(label.split(' ')[1]);
+      if (yearFromLabel === year) {
+        filteredData.labels.push(label);
+        filteredData.datasets[0].data.push(data.datasets[0].data[i]);
+        filteredData.datasets[1].data.push(data.datasets[1].data[i]);
+        filteredData.datasets[2].data.push(data.datasets[2].data[i]);
+      }
+    }
+
+    createChart(filteredData);
+  };
+
   return (
     <>
       <div className="relative flex flex-col min-w-0 break-words w-full mb-6 shadow-lg rounded bg-blueGray-700">
@@ -218,10 +268,26 @@ export default function CardLineChart() {
                   style={{ backgroundColor: '#4B5563', color: '#F9FAFB' }}
                 />
               </div>
+              <div className="flex flex-row mt-3">
+                <h6 className="text-blueGray-100 mb-1 text-xs font-semibold mr-1 mt-3">
+                  Filter by Year:
+                </h6>
+                <select
+                  className="dark-input p-2 rounded w-1/3"
+                  style={{ backgroundColor: '#4B5563', color: '#F9FAFB' }}
+                  onChange={(e) => handleFilterByYear(Number(e.target.value))}
+                >
+                  <option value="all">All Years</option>
+                  <option value="2022">2022</option>
+                  <option value="2023">2023</option>
+                  <option value="2024">2024</option>
+                  {/* Add more options for additional years */}
+                </select>
+              </div>
             </div>
           </div>
         </div>
-        <div className="p-4 flex-auto">
+        <div className="p-4 flex-auto"> 
           {/* Chart */}
           <div className="relative h-350-px">
             <canvas ref={chartContainer} id="line-chart"></canvas>
@@ -230,4 +296,4 @@ export default function CardLineChart() {
       </div>
     </>
   );
-}
+} 

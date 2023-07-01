@@ -5,15 +5,26 @@ import CardLineChart from "components/Cards/CardLineChart.js";
 import CartTambah from "components/Cards/CartTambahLaba";
 // import {useEffect} from 'react'
 // import {getCookie, validateToken} from '../../libs/cookie.lib'
-import {useSession,signIn, signOut} from 'next-auth/react'
-
+import { useEffect } from "react";
+import { useRouter } from "next/router";
+import { getSession } from "next-auth/react";
 // layout for page
 import Admin from "layouts/Admin.js";
 
 export default function Dashboard() {
-  const {data: session, status} = useSession()
-  console.log(session)
+  const router = useRouter();
 
+  useEffect(() => {
+    const checkSession = async () => {
+      const session = await getSession();
+      if (!session) {
+        router.replace("/");
+      }
+      console.log(session)
+    };
+
+    checkSession();
+  }, []);
 
     return (
       <>

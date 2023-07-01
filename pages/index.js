@@ -1,27 +1,35 @@
 import React from "react";
-import { signIn, signOut, useSession } from 'next-auth/react';
+import { useState } from "react";
+import { signIn } from "next-auth/react";
 import Auth from "layouts/Auth";
 import {useRouter } from 'next/router'
 
 export default function LoginPage() {
-  const { data: session } = useSession();
-  console.log(session);
-  const router = useRouter();
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
 
-  if (session && session.user.email === "kimeee220801@gmail.com") {
-    return <div>Anda Sudah Login</div>;
-  }
+  const handleEmailChange = (e) => {
+    setEmail(e.target.value);
+  };
 
-  const handleLogin = (e) => {
+  const handlePasswordChange = (e) => {
+    setPassword(e.target.value);
+  };
+
+  const handleFormSubmit = (e) => {
     e.preventDefault();
-    const email = e.target.email.value;
-    const password = e.target.password.value;
-    if (email === 'kimeee220801@gmail.com' && password === '123456') {
-      alert('Login Success');
-      router.push('/admin/dashboard')
-    } else {
-      alert('Login Failed');
-    }
+    alert("login Success")
+    signIn("credentials", {
+      email,
+      password,
+      callbackUrl: `${window.location.origin}/dashboard`,
+    });
+    
+  };
+
+  const handleGoogleLogin = (e) => {
+    e.preventDefault();
+    signIn("google", { callbackUrl: `${window.location.origin}/dashboard` });
   };
 
   return (
@@ -38,7 +46,7 @@ export default function LoginPage() {
                 <hr className="mt-6 border-b-1 border-blueGray-300" />
               </div>
               <div className="flex-auto px-4 lg:px-10 py-10 pt-0">
-                <form onSubmit={handleLogin}>
+                <form onSubmit={handleFormSubmit}>
                   <div className="relative w-full mb-3">
                     <label
                       className="block uppercase text-blueGray-600 text-xs font-bold mb-2"
@@ -51,6 +59,8 @@ export default function LoginPage() {
                       className="border-0 px-3 py-3 placeholder-blueGray-300 text-blueGray-600 bg-white rounded text-sm shadow focus:outline-none focus:ring w-full ease-linear transition-all duration-150"
                       placeholder="Email"
                       name="email"
+                      value={email}
+            onChange={handleEmailChange}
                     />
                   </div>
 
@@ -66,6 +76,8 @@ export default function LoginPage() {
                       className="border-0 px-3 py-3 placeholder-blueGray-300 text-blueGray-600 bg-white rounded text-sm shadow focus:outline-none focus:ring w-full ease-linear transition-all duration-150"
                       placeholder="Password"
                       name="password"
+                      value={password}
+            onChange={handlePasswordChange}
                     />
                   </div>
 
@@ -78,7 +90,7 @@ export default function LoginPage() {
                     </button>
                   </div>
                 </form>
-                <button onClick={() => signIn('google')} className="bg-blueGray-800 text-white active:bg-blueGray-600 text-sm font-bold uppercase px-6 py-3 rounded shadow hover:shadow-lg outline-none focus:outline-none mr-1 mt-3 mb-1 w-full ease-linear transition-all duration-150">
+                <button onClick={handleGoogleLogin} className="bg-blueGray-800 text-white active:bg-blueGray-600 text-sm font-bold uppercase px-6 py-3 rounded shadow hover:shadow-lg outline-none focus:outline-none mr-1 mt-3 mb-1 w-full ease-linear transition-all duration-150">
                   LOGIN WITH GOOGLE
                 </button>
               </div>
