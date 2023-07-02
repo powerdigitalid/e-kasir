@@ -22,7 +22,7 @@ export default NextAuth({
       }
     },
     async redirect(url, baseUrl) {
-      return Promise.resolve("/admin/dashboard");
+      return Promise.resolve(baseUrl);
     },
   },
   session: {
