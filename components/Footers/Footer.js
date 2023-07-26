@@ -122,7 +122,7 @@ export default function Footer() {
                     <li>
                       <a
                         className="text-blueGray-600 hover:text-blueGray-800 font-semibold block pb-2 text-sm"
-                        href="https://creative-tim.com/privacy?ref=nnjs-footer"
+                        href="https://www.powerdigital.id"
                       >
                         Privacy Policy
                       </a>
@@ -130,7 +130,7 @@ export default function Footer() {
                     <li>
                       <a
                         className="text-blueGray-600 hover:text-blueGray-800 font-semibold block pb-2 text-sm"
-                        href="https://creative-tim.com/contact-us?ref=nnjs-footer"
+                        href="https://www.powerdigital.id"
                       >
                         Contact Us
                       </a>
@@ -144,9 +144,9 @@ export default function Footer() {
           <div className="flex flex-wrap items-center md:justify-between justify-center">
             <div className="w-full md:w-4/12 px-4 mx-auto text-center">
               <div className="text-sm text-blueGray-500 font-semibold py-1">
-                Copyright © {new Date().getFullYear()} Notus NextJS by{" "}
+                Copyright © {new Date().getFullYear()} Design By{" "}
                 <a
-                  href="https://www.creative-tim.com?ref=nnjs-footer"
+                  href="https://www.powerdigital.id"
                   className="text-blueGray-500 hover:text-blueGray-800"
                 >
                   Creative Tim
