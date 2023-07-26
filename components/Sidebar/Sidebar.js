@@ -196,27 +196,6 @@ export default function Sidebar() {
                   </ul>
                 )}
               </li>
-              <li className="items-center">
-                <Link
-                  href="/admin/user"
-                  className={
-                    "text-xs uppercase py-3 font-bold block " +
-                    (router.pathname.indexOf("/admin/user") !== -1
-                      ? "text-lightBlue-500 hover:text-lightBlue-600"
-                      : "text-blueGray-700 hover:text-blueGray-500")
-                  }
-                >
-                  <i
-                    className={
-                      "fas fa-user mr-2 text-sm " +
-                      (router.pathname.indexOf("/admin/user") !== -1
-                        ? "opacity-75"
-                        : "text-blueGray-300")
-                    }
-                  ></i>{" "}
-                  User
-                </Link>
-              </li>
             </ul>
 
             <hr className="my-4 md:min-w-full" />
