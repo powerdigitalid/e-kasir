@@ -5,38 +5,35 @@ import { useRouter } from "next/router";
 // components
 
 export default function CardTambahPelanggan() {
-  // const [product_name, setProduct_name] = useState("");
-  // const [product_price, setProduct_price] = useState("");
-  // const [product_stock, setProduct_stock] = useState("");
-  // const router = useRouter();
+  const [name, setName] = useState("");
+  const router = useRouter();
 
-  const handleAdd = (e) => {
-    // e.preventDefault();
-    // if(!product_name || !product_price || !product_stock){
-    //   alert('Semua data harus diisi')
-    // }else{
-    //   fetch("/api/produk/create", {
-    //     method: "POST",
-    //     body: JSON.stringify({
-    //       product_name: product_name,
-    //       product_price: product_price,
-    //       product_stock: product_stock,
-    //     }),
-    //     headers: {
-    //       "Content-Type": "application/json",
-    //     },
-    //   })
-    //     .then((res) => res.json())
-    //     .then((res) => {
-    //       if (res.data) {
-    //         alert("Berhasil menambahkan produk");
-    //         router.push("/admin/products");
-    //       } else {
-
-    //         alert("Gagal menambahkan produk");
-    //       }
-    //     });
-    // }
+  const postType = (e) => {
+    e.preventDefault();
+    const data = {
+      name: name,
+    };
+    if(!name){
+      alert("Semua data harus diisi");
+    } else {
+      fetch("/api/pelanggan/all", {
+        method: "POST",
+        body: JSON.stringify(data),
+        headers: {
+          "Content-Type": "application/json",
+        },
+      })
+        .then((res) => res.json())
+        .then((res) => {
+          if (res.data) {
+            alert("Berhasil menambahkan pelanggan");
+            router.push("/admin/transaksi-terjual");
+          } else {
+            alert("Gagal menambahkan tipe transaksi");
+            console.log(res);
+          }
+        });
+    }
   };
 
   return (
@@ -48,7 +45,7 @@ export default function CardTambahPelanggan() {
           </div>
         </div>
         <div className="flex-auto px-4 lg:px-10 py-10 pt-0">
-          <form onSubmit={handleAdd}>
+          <form onSubmit={postType}>
             <h6 className="text-blueGray-400 text-sm mt-3 mb-6 font-bold uppercase">
               User Information
             </h6>
@@ -65,7 +62,7 @@ export default function CardTambahPelanggan() {
                     type="text"
                     className="border-0 px-2 py-2 placeholder-blueGray-300 text-blueGray-600 bg-white rounded text-sm shadow focus:outline-none focus:ring w-full ease-linear transition-all duration-150"
                     placeholder="Nama Pelanggan"
-                    // onChange={(e) => setProduct_name(e.target.value)}
+                    onChange={(e) => setName(e.target.value)}
                   />
                 </div>
               </div>

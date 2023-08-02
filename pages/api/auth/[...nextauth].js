@@ -4,6 +4,7 @@ import GoogleProvider from "next-auth/providers/google";
 const validEmail = process.env.GOOGLE_USER;
 const devUser = process.env.DEV_USER; // Email yang diizinkan untuk login
 const pramUser = process.env.PRAM_USER; // Email yang diizinkan untuk login
+const kimeUser = process.env.KIME_USER; // Email yang diizinkan untuk login
 
 export default NextAuth({
   providers: [
@@ -16,7 +17,7 @@ export default NextAuth({
     async signIn(user, account, profile) {
       // Memeriksa apakah email yang masuk sesuai dengan email yang diizinkan
       const email = user.profile?.email || user.profile?.emails?.[0]?.value;
-      if (email === validEmail || email === devUser || email === pramUser) {
+      if (email === validEmail || email === devUser || email === pramUser || email === kimeUser) {
         return Promise.resolve(true);
       } else {
         return Promise.resolve(false);

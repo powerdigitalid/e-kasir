@@ -10,7 +10,7 @@ export default function CardTableTerjual({ color }) {
   const [loading, setLoading] = useState(true);
 
   const fetchTransaksi = () => {
-    fetch("/api/transaksi/jual", {
+    fetch("/api/jual/all", {
       method: "GET",
     })
       .then((res) => res.json())
@@ -26,7 +26,7 @@ export default function CardTableTerjual({ color }) {
   };
 
   const handleDelete = (id) => {
-    fetch(`/api/transaksi/actionJual?id=${id}`, {
+    fetch(`/api/jual/all?id=${id}`, {
         method: "DELETE",
     })
     .then((res) => res.json())
@@ -199,28 +199,28 @@ export default function CardTableTerjual({ color }) {
                   {item.product.product_name}
                 </td>
                 <td className="border-t-0 px-6 align-middle border-l-0 border-r-0 text-xm whitespace-nowrap p-4">
-                  {item.quantity}
+                  {item.pembayaran}
+                </td>
+                <td className="border-t-0 px-6 align-middle border-l-0 border-r-0 text-xm whitespace-nowrap p-4">
+                {moneyFormat(item.harga)}
+                </td>
+                <td className="border-t-0 px-6 align-middle border-l-0 border-r-0 text-xm whitespace-nowrap p-4">
+                {item.quantity}
+                </td>
+                <td className="border-t-0 px-6 align-middle border-l-0 border-r-0 text-xm whitespace-nowrap p-4">
+                {item.invove}
+                </td>
+                <td className="border-t-0 px-6 align-middle border-l-0 border-r-0 text-xm whitespace-nowrap p-4">
+                {moneyFormat(item.pembayaran)}
+                </td>
+                <td className="border-t-0 px-6 align-middle border-l-0 border-r-0 text-xm whitespace-nowrap p-4">
+                {moneyFormat(item.sisa)}
                 </td>
                 <td className="border-t-0 px-6 align-middle border-l-0 border-r-0 text-xm whitespace-nowrap p-4">
                 {moneyFormat(item.total)}
                 </td>
                 <td className="border-t-0 px-6 align-middle border-l-0 border-r-0 text-xm whitespace-nowrap p-4">
-                {moneyFormat(item.total)}
-                </td>
-                <td className="border-t-0 px-6 align-middle border-l-0 border-r-0 text-xm whitespace-nowrap p-4">
-                {moneyFormat(item.total)}
-                </td>
-                <td className="border-t-0 px-6 align-middle border-l-0 border-r-0 text-xm whitespace-nowrap p-4">
-                {moneyFormat(item.total)}
-                </td>
-                <td className="border-t-0 px-6 align-middle border-l-0 border-r-0 text-xm whitespace-nowrap p-4">
-                {moneyFormat(item.total)}
-                </td>
-                <td className="border-t-0 px-6 align-middle border-l-0 border-r-0 text-xm whitespace-nowrap p-4">
-                {moneyFormat(item.total)}
-                </td>
-                <td className="border-t-0 px-6 align-middle border-l-0 border-r-0 text-xm whitespace-nowrap p-4">
-                {moneyFormat(item.total)}
+                {item.keterangan}
                 </td>
                 <td className="border-t-0 px-6 align-middle border-l-0 border-r-0 text-xm whitespace-nowrap p-4">
                   <button

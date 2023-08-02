@@ -7,7 +7,15 @@ export default function CardTerjual() {
   const router = useRouter();
   const [product_id, setProduct_id] = useState("");
   const [product, setProduct] = useState([]);
+  const [pelanggan_id, setPelanggan_id] = useState("");
+  const [pelanggan, setPelanggan] = useState([]);
   const [quantity, setQuantity] = useState("");
+  const [date, setDate] = useState("");
+  const [harga, setHarga] = useState("");
+  const [pembayaran, setPembayaran] = useState("");
+  const [sisa, setSisa] = useState("");
+  const [keterangan, setKeterangan] = useState("");
+  const [invove, setInvove] = useState("");
   const [total, setTotal] = useState(0)
   const [error, setError] = useState("");
 
@@ -25,16 +33,36 @@ export default function CardTerjual() {
         }
       });
   };
+  const fetchPelanggan = () => {
+    fetch("/api/pelanggan/all", {
+      method: "GET",
+    })
+      .then((res) => res.json())
+      .then((res) => {
+        if (res.data) {
+          setPelanggan(res.data);
+        } else {
+          alert("Gagal mengambil data");
+          console.log(res);
+        }
+      });
+  };
 
   const handleAdd = (e) => {
     e.preventDefault();
     const data ={
       product_id : product_id,
+      pelanggan_id : pelanggan_id,
       quantity : parseInt(quantity),
       total : parseInt(total),
-      date : new Date()
+      date : date,
+      harga : parseInt(harga),
+      pembayaran : parseInt(pembayaran),
+      sisa : parseInt(sisa),
+      keterangan : keterangan,
+      invove : invove,
     }
-    fetch("/api/transaksi/jual", {
+    fetch("/api/jual/create", {
       method: "POST",
       body: JSON.stringify(data),
       headers: {
@@ -56,6 +84,7 @@ export default function CardTerjual() {
 
   useEffect(() => {
     fetchProduk();
+    fetchPelanggan();
   }, []);
 
   return (
@@ -89,14 +118,13 @@ export default function CardTerjual() {
                   </label>
                   <select
                     className="border-0 px-2 py-2 placeholder-blueGray-300 text-blueGray-600 bg-white rounded text-sm shadow focus:outline-none focus:ring w-full ease-linear transition-all duration-150"
-                    value={product_id}
-                    onChange={(e) => setProduct_id(e.target.value)}
+                    value={pelanggan_id}
+                    onChange={(e) => setPelanggan_id(e.target.value)}
                   >
                     <option value="">Pilih Pelanggan</option>
-                    {product.map((item, index) => (
+                    {pelanggan.map((item, index) => (
                       <option key={index} value={item.id}>
-                        {item.product_name} - Stock {item.product_stock} - Rp.
-                        {moneyFormat(item.product_price)}
+                        {item.name}
                       </option>
                     ))}
                   </select>
@@ -108,7 +136,7 @@ export default function CardTerjual() {
                     className="block uppercase text-blueGray-600 text-xs font-bold mb-2"
                     htmlFor="grid-password"
                   >
-                    Pilih Pelanggan
+                    Pilih Produk
                   </label>
                   <select
                     className="border-0 px-2 py-2 placeholder-blueGray-300 text-blueGray-600 bg-white rounded text-sm shadow focus:outline-none focus:ring w-full ease-linear transition-all duration-150"
@@ -136,8 +164,8 @@ export default function CardTerjual() {
                   <input
                     type="date"
                     className="border-0 px-2 py-2 placeholder-blueGray-300 text-blueGray-600 bg-white rounded text-sm shadow focus:outline-none focus:ring w-full ease-linear transition-all duration-150"
-                    // value={quantity}
-                    // onChange={(e) => setQuantity(e.target.value)}
+                    value={date}
+                    onChange={(e) => setDate(e.target.value)}
                   />
                 </div>
               </div>
@@ -153,8 +181,8 @@ export default function CardTerjual() {
                     type="number"
                     className="border-0 px-2 py-2 placeholder-blueGray-300 text-blueGray-600 bg-white rounded text-sm shadow focus:outline-none focus:ring w-full ease-linear transition-all duration-150"
                     placeholder="Harga"
-                    // value={quantity}
-                    // onChange={(e) => setQuantity(e.target.value)}
+                    value={harga}
+                    onChange={(e) => setHarga(e.target.value)}
                   />
                 </div>
               </div>
@@ -170,6 +198,8 @@ export default function CardTerjual() {
                     type="number"
                     className="border-0 px-2 py-2 placeholder-blueGray-300 text-blueGray-600 bg-white rounded text-sm shadow focus:outline-none focus:ring w-full ease-linear transition-all duration-150"
                     placeholder="Jumlah Karung"
+                    value={quantity}
+                    onChange={(e) => setQuantity(e.target.value)}
                   />
                 </div>
               </div>
@@ -185,8 +215,8 @@ export default function CardTerjual() {
                     type="number"
                     className="border-0 px-2 py-2 placeholder-blueGray-300 text-blueGray-600 bg-white rounded text-sm shadow focus:outline-none focus:ring w-full ease-linear transition-all duration-150"
                     placeholder="Invoice Karung"
-                    // value={quantity}
-                    // onChange={(e) => setQuantity(e.target.value)}
+                    value={invove}
+                    onChange={(e) => setInvove(e.target.value)}
                   />
                 </div>
               </div>
@@ -202,8 +232,8 @@ export default function CardTerjual() {
                     type="number"
                     className="border-0 px-2 py-2 placeholder-blueGray-300 text-blueGray-600 bg-white rounded text-sm shadow focus:outline-none focus:ring w-full ease-linear transition-all duration-150"
                     placeholder="Pembayaran"
-                    // value={quantity}
-                    // onChange={(e) => setQuantity(e.target.value)}
+                    value={pembayaran}
+                    onChange={(e) => setPembayaran(e.target.value)}
                   />
                 </div>
               </div>
@@ -219,8 +249,8 @@ export default function CardTerjual() {
                     type="number"
                     className="border-0 px-2 py-2 placeholder-blueGray-300 text-blueGray-600 bg-white rounded text-sm shadow focus:outline-none focus:ring w-full ease-linear transition-all duration-150"
                     placeholder="Sisa Hutang"
-                    // value={quantity}
-                    // onChange={(e) => setQuantity(e.target.value)}
+                    value={sisa}
+                    onChange={(e) => setSisa(e.target.value)}
                   />
                 </div>
               </div>
@@ -236,6 +266,8 @@ export default function CardTerjual() {
                     type="textarea"
                     className="border-0 px-2 py-2 placeholder-blueGray-300 text-blueGray-600 bg-white rounded text-sm shadow focus:outline-none focus:ring w-full ease-linear transition-all duration-150"
                     placeholder="Keterangan"
+                    value={keterangan}
+                    onChange={(e) => setKeterangan(e.target.value)}
                   />
                 </div>
               </div>

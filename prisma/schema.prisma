@@ -16,6 +16,7 @@ model Product {
   updatedAt      DateTime         @default(now())
   transaksi_jual Transaksi_jual[]
   transaksi_beli Transaksi_beli[]
+  jual           Jual[]
 }
 
 model Transaksi_jual {
@@ -68,6 +69,32 @@ model HitungLaba {
   date              DateTime
   createdAt         DateTime @default(now())
   updatedAt         DateTime @default(now())
+}
+
+model Pelanggan {
+  id        String   @id @default(auto()) @map("_id") @db.ObjectId
+  name      String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @default(now())
+  jual      Jual[]
+}
+
+model Jual {
+  id           String    @id @default(auto()) @map("_id") @db.ObjectId
+  invove       String
+  product      Product   @relation(fields: [product_id], references: [id])
+  product_id   String    @db.ObjectId
+  quantity     Int
+  pelanggan    Pelanggan @relation(fields: [pelanggan_id], references: [id])
+  pelanggan_id String    @db.ObjectId
+  harga        Int
+  pembayaran   Int
+  sisa         Int
+  keterangan   String
+  date         DateTime
+  total        Int
+  createdAt    DateTime  @default(now())
+  updatedAt    DateTime  @default(now())
 }
 
 model User {
