@@ -45,7 +45,7 @@ export default async function handler(req, res) {
           product_id: String(product_id),
           pelanggan_id: String(pelanggan_id),
           quantity,
-          total: parseInt(quantity) * parseInt(product.product_price),
+          total: parseInt(quantity) * parseInt(harga),
           date: date,
           harga: parseInt(harga),
           pembayaran: parseInt(pembayaran),

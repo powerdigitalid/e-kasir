@@ -91,7 +91,7 @@ model Jual {
   pembayaran   Int
   sisa         Int
   keterangan   String
-  date         DateTime
+  date         String
   total        Int
   createdAt    DateTime  @default(now())
   updatedAt    DateTime  @default(now())

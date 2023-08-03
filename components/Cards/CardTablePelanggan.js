@@ -33,7 +33,7 @@ export default function CardTablePelanggan({ color }) {
   };
 
   const handleDelete = (id) => {
-    fetch(`/api/jual/all?id=${id}`, {
+    fetch(`/api/jual/delete?id=${id}`, {
       method: "DELETE",
     })
       .then((res) => res.json())
@@ -217,13 +217,13 @@ export default function CardTablePelanggan({ color }) {
                       {index + 1}
                     </td>
                     <td className="border-t-0 px-6 align-middle border-l-0 border-r-0 text-xm whitespace-nowrap p-4">
-                      {new Date(item.date).toLocaleDateString()}
+                      {item.pelanggan.name}
                     </td>
                     <td className="border-t-0 px-6 align-middle border-l-0 border-r-0 text-xm whitespace-nowrap p-4">
                       {item.product.product_name}
                     </td>
                     <td className="border-t-0 px-6 align-middle border-l-0 border-r-0 text-xm whitespace-nowrap p-4">
-                      {item.pengiriman}
+                    {new Date(item.date).toLocaleDateString()}
                     </td>
                     <td className="border-t-0 px-6 align-middle border-l-0 border-r-0 text-xm whitespace-nowrap p-4">
                     {moneyFormat(item.harga)}

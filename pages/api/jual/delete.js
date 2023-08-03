@@ -4,7 +4,7 @@ export default async function handler(req, res) {
   const { id } = req.query;
   if (id && req.method === "DELETE") {
     try {
-      const keuangan = await prisma.keuangan.delete({
+      const keuangan = await prisma.jual.delete({
         where: {
           id: id,
         },

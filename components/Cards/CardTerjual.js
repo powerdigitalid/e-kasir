@@ -48,6 +48,19 @@ export default function CardTerjual() {
       });
   };
 
+  const handleClear = (e) => {
+    e.preventDefault();
+    setProduct_id("");
+    setPelanggan_id("");
+    setQuantity("");
+    setDate("");
+    setHarga("");
+    setPembayaran("");
+    setSisa("");
+    setKeterangan("");
+    setInvove("");
+  };
+
   const handleAdd = (e) => {
     e.preventDefault();
     const data ={
@@ -71,6 +84,7 @@ export default function CardTerjual() {
     }).then((res) => {
       if (res.status === 200) {
         alert("Berhasil menambahkan data");
+        handleClear(e);
         router.push("/admin/transaksi-terjual");
       } else {
         alert("Gagal menambahkan data");
