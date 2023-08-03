@@ -93,6 +93,17 @@ export default function CardTerjual() {
     });
   };
 
+  const calculateTotal = () => {
+    const hargaBarang = parseInt(harga) || 0;
+    const quantityValue = parseInt(quantity) || 0;
+    const calculatedTotal = hargaBarang * quantityValue;
+    setTotal(calculatedTotal);
+  };
+
+  useEffect(() => {
+    calculateTotal();
+  }, [harga, quantity]);
+
 
 
 

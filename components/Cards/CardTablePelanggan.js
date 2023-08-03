@@ -10,6 +10,8 @@ export default function CardTablePelanggan({ color }) {
   const [pelanggan, setPelanggan] = useState([]);
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(true);
+  const [search, setSearch] = useState('');
+  const searched = pelanggan ? pelanggan.filter((pelanggan) => pelanggan.name !== null ? pelanggan.pelanggan.name.toLowerCase().includes(search) : null) : null;
 
   const handleGoogleLogin = (e) => {
     e.preventDefault();
@@ -71,6 +73,8 @@ export default function CardTablePelanggan({ color }) {
                 type="text"
                 placeholder="Search here..."
                 className="border-0 px-3 py-3 placeholder-blueGray-300 text-blueGray-600 relative bg-white bg-white rounded text-sm shadow outline-none focus:outline-none focus:ring w-full pl-10"
+                value={search}
+                onChange={(e) => setSearch(e.target.value)}
               />
             </div>
             <button
@@ -209,9 +213,9 @@ export default function CardTablePelanggan({ color }) {
                 </th>
               </tr>
             </thead>
-            {pelanggan.length > 0 ? (
-              pelanggan.map((item, index) => (
-                <tbody>
+            {searched.length > 0 ? (
+              <tbody>
+                {searched.slice(0).reverse().map((item, index) => (
                   <tr key={index}>
                     <td className="border-t-0 px-6 align-middle border-l-0 border-r-0 text-xm whitespace-nowrap p-4">
                       {index + 1}
@@ -256,13 +260,13 @@ export default function CardTablePelanggan({ color }) {
                       </button>
                     </td>
                   </tr>
-                </tbody>
-              ))
+                ))}
+              </tbody>
             ) : (
               <tbody>
                 <tr>
-                  <td colSpan="12" className="text-center p-4">
-                    Tidak ada data
+                  <td colSpan="12" className="text-center">
+                    Data Kosong
                   </td>
                 </tr>
               </tbody>

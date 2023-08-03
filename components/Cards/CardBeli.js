@@ -52,7 +52,18 @@ export default function CardBeli() {
     });
   };
 
+  const calculateTotal = () => {
+    const selectedProduct = product.find((item) => item.id === product_id);
+    if (selectedProduct) {
+      const productPrice = selectedProduct.product_price || 0;
+      const quantityValue = parseInt(quantity) || 0;
+      setTotal(productPrice * quantityValue);
+    }
+  };
 
+  useEffect(() => {
+    calculateTotal();
+  }, [quantity, product_id]);
 
 
   useEffect(() => {
